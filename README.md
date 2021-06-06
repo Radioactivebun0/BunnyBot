@@ -1,6 +1,6 @@
 # BunnyBot
 
-A discord bot I made, named after my love for bunnys.
+A discord bot I made, named after my love for bunnys
 
 Use `!Bb help` for a list of working commands
 
