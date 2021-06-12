@@ -47,7 +47,7 @@ def send_data_to_monitering_server():
     if len(sys.argv[1:]) == 0:
         host = socket.gethostname()
     else:
-        port = sys.argv[1]
+        host = sys.argv[1]
     port = 12348
     s.connect((host, port))
     print(s.recv(1024).decode('utf-8'))
