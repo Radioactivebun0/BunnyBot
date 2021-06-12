@@ -14,6 +14,8 @@ from mcstatus import MinecraftServer
 import api
 import uwuify
 import sys
+import threading
+import socket
 
 from typing import List
 
@@ -37,6 +39,22 @@ intents = discord.Intents().all()
 client = commands.Bot(command_prefix='!Bb ', intents = intents)
 client.remove_command('help')
 counter = 0
+
+def send_data_to_monitering_server():
+    s = socket.socket(
+        socket.AF_INET,
+        socket.SOCK_STREAM)
+    if len(sys.argv[1:]) == 0:
+        host = socket.gethostname()
+    else:
+        port = sys.argv[1]
+    port = 12348
+    s.connect((host, port))
+    print(s.recv(1024).decode('utf-8'))
+    s.send('on -BunnyBot'.encode('utf-8'))
+    time.sleep(0.1)
+    s.send('stoping'.encode('utf-8'))
+    s.close()
 
 
 @client.event
@@ -144,6 +162,17 @@ async def off(ctx):
     embed = discord.Embed(title='BunnyBot offline :(', colour=discord.Colour.blue())
     channel = client.get_channel(828615308217417748)
     await channel.send(embed=embed)
+    s = socket.socket(
+        socket.AF_INET,
+        socket.SOCK_STREAM)
+    host = socket.gethostname()
+    port = 12348
+    s.connect((host, port))
+    print(s.recv(1024).decode('utf-8'))
+    s.send('off -BunnyBot'.encode('utf-8'))
+    time.sleep(0.1)
+    s.send('stoping'.encode('utf-8'))
+    s.close()
     sys.exit()
 
 
@@ -900,8 +929,6 @@ async def queue(ctx, url: str):
 
     print("Song added to queue\n")
 
-
-
-
+send_data_to_monitering_server()
 
 client.run('YOUR TOKEN HERE')
