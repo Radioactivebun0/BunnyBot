@@ -165,7 +165,10 @@ async def off(ctx):
     s = socket.socket(
         socket.AF_INET,
         socket.SOCK_STREAM)
-    host = socket.gethostname()
+    if len(sys.argv[1:]) == 0:
+        host = socket.gethostname()
+    else:
+        host = sys.argv[1]
     port = 12348
     s.connect((host, port))
     print(s.recv(1024).decode('utf-8'))
