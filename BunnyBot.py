@@ -35,26 +35,33 @@ enable_uwu = False
 
 ready_message = 0
 
+enable_monitering_server = False
+
 intents = discord.Intents().all()
 client = commands.Bot(command_prefix='!Bb ', intents = intents)
 client.remove_command('help')
 counter = 0
 
 def send_data_to_monitering_server():
-    s = socket.socket(
-        socket.AF_INET,
-        socket.SOCK_STREAM)
-    if len(sys.argv[1:]) == 0:
-        host = socket.gethostname()
-    else:
-        host = sys.argv[1]
-    port = 12348
-    s.connect((host, port))
-    print(s.recv(1024).decode('utf-8'))
-    s.send('on -BunnyBot'.encode('utf-8'))
-    time.sleep(0.1)
-    s.send('stoping'.encode('utf-8'))
-    s.close()
+    global enable_monitering_server
+    if enable_monitering_server == True:
+        try:
+            s = socket.socket(
+                socket.AF_INET,
+                socket.SOCK_STREAM)
+            if len(sys.argv[1:]) == 0:
+                host = socket.gethostname()
+            else:
+                host = sys.argv[1]
+            port = 12348
+            s.connect((host, port))
+            print(s.recv(1024).decode('utf-8'))
+            s.send('on -BunnyBot'.encode('utf-8'))
+            time.sleep(0.1)
+            s.send('stoping'.encode('utf-8'))
+            s.close()
+        except:
+            print('Error connecting to monitering server')
 
 
 @client.event
@@ -159,24 +166,29 @@ async def uwu(ctx):
 @client.command()
 async def off(ctx):
     global ready_message
+    global enable_monitering_server
     embed = discord.Embed(title='BunnyBot offline :(', colour=discord.Colour.blue())
     channel = client.get_channel(828615308217417748)
     await channel.send(embed=embed)
-    s = socket.socket(
-        socket.AF_INET,
-        socket.SOCK_STREAM)
-    if len(sys.argv[1:]) == 0:
-        host = socket.gethostname()
-    else:
-        host = sys.argv[1]
-    port = 12348
-    s.connect((host, port))
-    print(s.recv(1024).decode('utf-8'))
-    s.send('off -BunnyBot'.encode('utf-8'))
-    time.sleep(0.1)
-    s.send('stoping'.encode('utf-8'))
-    s.close()
-    sys.exit()
+    if enable_monitering_server == True:
+        try:
+            s = socket.socket(
+                socket.AF_INET,
+                socket.SOCK_STREAM)
+            if len(sys.argv[1:]) == 0:
+                host = socket.gethostname()
+            else:
+                host = sys.argv[1]
+            port = 12348
+            s.connect((host, port))
+            print(s.recv(1024).decode('utf-8'))
+            s.send('off -BunnyBot'.encode('utf-8'))
+            time.sleep(0.1)
+            s.send('stoping'.encode('utf-8'))
+            s.close()
+        except:
+            print('Error connecting to monitering server')
+        sys.exit()
 
 
 @client.command()
