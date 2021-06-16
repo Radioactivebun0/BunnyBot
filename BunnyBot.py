@@ -75,7 +75,6 @@ async def on_ready():
     ready_message = msg
 
 
-
 @client.event
 async def on_message(message):
     await client.process_commands(message)
@@ -201,18 +200,21 @@ async def members(ctx):
 @client.command()
 async def suggest(ctx, *, suggestion):
     print(f'{ctx.message.author} suggested: {suggestion}')
-    channel = client.get_channel(759861580228984894)
+    channel = discord.utils.get(ctx.guild.channels, name='suggestions')
+    channel = client.get_channel(channel.id)
     embedVar = discord.Embed(colour=discord.Colour.blue(), title=f"{ctx.message.author.name} suggests:", description=f"{suggestion}", )  # add color=
-    await channel.send(embed=embedVar)
+    msg = await channel.send(embed=embedVar)
+    await msg.add_reaction('👍')
+    await msg.add_reaction('👎')
 
-
+"""
 @client.command()
 async def report_bug(ctx, *, bug):
     print(f'{ctx.message.author} reported the bug: {bug}')
     channel = client.get_channel(759860033936293898)
     embedVar = discord.Embed(colour=discord.Colour.blue(), title=f"{ctx.message.author.name} reported the bug:", description=f"{bug}", )  # add color=
     await channel.send(embed=embedVar)
-
+"""
 
 @client.command()
 async def yeet(ctx):
@@ -246,7 +248,7 @@ async def help(ctx):
 
 
 @client.command(pass_context=True)
-@commands.has_role('Discord Admin')
+@commands.has_role('Admin')
 async def kick(ctx, member: discord.Member, *, reason=None):
     await member.kick(reason=None)
     embedVar = discord.Embed(colour=discord.Colour.blue(), title=f'Kicked `{member.display_name}`')
@@ -254,7 +256,7 @@ async def kick(ctx, member: discord.Member, *, reason=None):
 
 
 @client.command()
-@commands.has_role('Discord Admin')
+@commands.has_role('Admin')
 async def ban(ctx, member: discord.Member, *, reason=None):
     await member.ban(reason=reason)
     embedVar = discord.Embed(colour=discord.Colour.blue(), title=f'Banned `{member.display_name}`')
@@ -262,7 +264,7 @@ async def ban(ctx, member: discord.Member, *, reason=None):
 
 
 @client.command()
-@commands.has_role('Discord Admin')
+@commands.has_role('Admin')
 async def unban(ctx, *, member):
     bannned_users = await ctx.guild.bans()
     member_name, member_discriminator = member.split('#')
@@ -303,7 +305,7 @@ async def userinfo(ctx, member: discord.Member = None):
     await ctx.send(embed=embed)
 
 @client.command()
-@commands.has_role('Discord Admin')
+@commands.has_role('Admin')
 async def mute(ctx, member: discord.Member):
     guild = ctx.guild
 
@@ -326,7 +328,7 @@ async def mute(ctx, member: discord.Member):
 
 
 @client.command()
-@commands.has_role('Discord Admin')
+@commands.has_role('Admin')
 async def unmute(ctx, member: discord.Member):
     guild = ctx.guild
 
@@ -337,7 +339,7 @@ async def unmute(ctx, member: discord.Member):
             await ctx.send(embed=embedVar)
 
 @client.command()
-@commands.has_role('Discord Admin')
+@commands.has_role('Admin')
 async def purge(ctx, amount):
     try:
         true_amt = int(amount) + 1
@@ -440,23 +442,28 @@ async def on_raw_reaction_remove(payload):
         else:
             print('Role not found')
 
-#@client.event
-#async def on_member_join(member):
- #   guild = member.guild
-  #  print(str(member.mention) + ' joined')
-   # channel = client.get_channel(752649321601695879)
-    #await channel.send('Hello ' + str(
-     #   member.mention) + ', make sure to cheak out <#720073337644122172> for the rules, <#742794245903089685> contains the ip. Have Fun!')
-    #for role in guild.roles:
-     #   if role.name == "Member":
-      #      await member.add_roles(role)
+@client.event
+async def on_member_join(member):
+    guild = member.guild
+    print(str(member.mention) + ' joined')
+    #channel = discord.utils.get(member.guild.channels, name="join-and-leave-log")
+    channel = client.get_channel(854539282530304000)
+    embed = discord.Embed(title=f"Joined {channel}")
+    await channel.send(embed=embed)
+    await channel.send('**Hello ' + str(
+        member.mention) + ', make sure to cheak out <#854533764339335179> for the rules. Make sure to have a good time here!**')
+    for role in guild.roles:
+        if role.name == "Member":
+            await member.add_roles(role)
 
 
-#@client.event
-#async def on_member_remove(member):
- #   print(str(member.mention) + ' left')
-  #  channel = client.get_channel(752649321601695879)
-   # await channel.send('Bye ' + str(member.mention))
+@client.event
+async def on_member_remove(member):
+    guild = member.guild
+    print(str(member.mention) + ' left')
+    #channel = discord.utils.get(member.guild.channels, name='join-and-leave-log')
+    channel = client.get_channel(854539282530304000)
+    await channel.send('Bye ' + str(member.mention))
 
 
 @client.command(pass_context=True)
@@ -709,7 +716,7 @@ async def resume(ctx):
 
 
 @client.command(pass_context=True)
-@commands.has_role('Discord Admin')
+@commands.has_role('Admin')
 async def force_skip(ctx):
     voice = get(client.voice_clients, guild=ctx.guild)
 
@@ -946,4 +953,4 @@ async def queue(ctx, url: str):
 
 send_data_to_monitering_server()
 
-client.run('YOUR TOKEN HERE')
+client.run('PUT YOUR TOKEN HERE')
