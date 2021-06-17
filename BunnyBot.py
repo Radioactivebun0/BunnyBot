@@ -410,7 +410,7 @@ async def on_raw_reaction_add(payload):
         guild = discord.utils.find(lambda g : g.id == guild_id, client.guilds)
         if payload.emoji.name == 'twitch':
             role = discord.utils.get(guild.roles, name='Twitch Ping')
-        elif payload.emoji.name == 'AnnouncementPing':
+        elif payload.emoji.name == '❗':
             role = discord.utils.get(guild.roles, name='Announcement Ping')
         else:
             role = discord.utils.get(guild.roles, name=payload.emoji.name)
@@ -427,13 +427,13 @@ async def on_raw_reaction_add(payload):
 @client.event
 async def on_raw_reaction_remove(payload):
     message_id = payload.message_id
-    if message_id == 772611461536153601:
+    if message_id == 854720148158283796:
         guild_id = payload.guild_id
         guild = discord.utils.find(lambda g: g.id == guild_id, client.guilds)
-        if payload.emoji.name == 'Netherite_Sword':
-            role = discord.utils.get(guild.roles, name='Anarchy')
-        elif payload.emoji.name == 'Dirt':
-            role = discord.utils.get(guild.roles, name='Vanilla Craft SMP')
+        if payload.emoji.name == 'twitch':
+            role = discord.utils.get(guild.roles, name='Twitch Ping')
+        elif payload.emoji.name == '❗':
+            role = discord.utils.get(guild.roles, name='Announcement Ping')
         else:
             role = discord.utils.get(guild.roles, name=payload.emoji.name)
 
@@ -450,10 +450,8 @@ async def on_raw_reaction_remove(payload):
 async def on_member_join(member):
     guild = member.guild
     print(str(member.mention) + ' joined')
-    #channel = discord.utils.get(member.guild.channels, name="join-and-leave-log")
-    channel = client.get_channel(854539282530304000)
-    embed = discord.Embed(title=f"Joined {channel}")
-    await channel.send(embed=embed)
+    channel = discord.utils.get(member.guild.channels, name="join-and-leave-log")
+    #channel = client.get_channel(854539282530304000)
     await channel.send('**Hello ' + str(
         member.mention) + ', make sure to cheak out <#854533764339335179> for the rules. Make sure to have a good time here!**')
     for role in guild.roles:
@@ -465,9 +463,9 @@ async def on_member_join(member):
 async def on_member_remove(member):
     guild = member.guild
     print(str(member.mention) + ' left')
-    #channel = discord.utils.get(member.guild.channels, name='join-and-leave-log')
-    channel = client.get_channel(854539282530304000)
-    await channel.send('Bye ' + str(member.mention))
+    channel = discord.utils.get(member.guild.channels, name='join-and-leave-log')
+    #channel = client.get_channel(854539282530304000)
+    await channel.send('**Bye ' + str(member.mention) + '**')
 
 
 @client.command(pass_context=True)
