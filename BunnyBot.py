@@ -108,6 +108,8 @@ async def on_message(message):
                                        "response"])  # One of {'neutral', 'anger', 'joy', 'fear', 'sadness'}. An emotion to condition the response on. Optional param, if not specified, 'neutral' is used
         oldM = msg
     if message.author != client.user:
+        if message.channel.name == 'spam' or message.channel.name == 'bot-commands':
+            return
         d = open("levels.json")
         levels_data = json.load(d)
         print(str(message.author) + ' Sent message: ' + str(message.content))
@@ -126,7 +128,7 @@ async def on_message(message):
             print(str(message.author) + ' leveled up!')
             embedVar = discord.Embed(colour=discord.Colour.blue(), title=f"{message.author.name}",
                                      description=f"Leveled Up!\nLevel: {int(level) + 1}", )  # add color=
-            await message.channel.send(embed=embedVar)
+            msg = await message.channel.send(embed=embedVar)
             a = open('levels.json')
             levels_data = json.load(a)
             new_xp = 0
@@ -137,6 +139,8 @@ async def on_message(message):
             levels_data[str(message.author)] = {'xp': str(new_xp), 'level': str(new_level)}
             with open('levels.json', 'w') as k:
                 json.dump(levels_data, k)
+            await asyncio.sleep(5)
+            await msg.delete()
     if enable_uwu == True:
         if message.author == client.user:
             return
@@ -401,13 +405,13 @@ async def level(ctx):
 @client.event
 async def on_raw_reaction_add(payload):
     message_id = payload.message_id
-    if message_id == 772611461536153601:
+    if message_id == 854720148158283796:
         guild_id = payload.guild_id
         guild = discord.utils.find(lambda g : g.id == guild_id, client.guilds)
-        if payload.emoji.name == 'Netherite_Sword':
-            role = discord.utils.get(guild.roles, name='Anarchy')
-        elif payload.emoji.name == 'Dirt':
-            role = discord.utils.get(guild.roles, name='Vanilla Craft SMP')
+        if payload.emoji.name == 'twitch':
+            role = discord.utils.get(guild.roles, name='Twitch Ping')
+        elif payload.emoji.name == 'AnnouncementPing':
+            role = discord.utils.get(guild.roles, name='Announcement Ping')
         else:
             role = discord.utils.get(guild.roles, name=payload.emoji.name)
 
@@ -953,4 +957,4 @@ async def queue(ctx, url: str):
 
 send_data_to_monitering_server()
 
-client.run('PUT YOUR TOKEN HERE')
+client.run('YOUR TOKEN HERE')
